@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chocolate Barr's marketing planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Manrope:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-paper: #F5EFE3;
+  --bg-surface: #FAF6EC;
+  --bg-card: #FFFFFF;
+  --ink: #1F1410;
+  --ink-2: #5A453A;
+  --ink-3: #8A7568;
+  --ink-4: #B5A697;
+  --border: #E5D9C4;
+  --border-strong: #D4C3A8;
+  --accent: #6B3410;
+  --accent-soft: #C9892F;
+  --rest-pattern: rgba(139, 105, 80, 0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg-paper); color: var(--ink); font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; }
+body { padding: 2.5rem 1.5rem; min-height: 100vh; }
+.page { max-width: 1180px; margin: 0 auto; }
+
+.brand-mark { font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
+
+h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.05; margin: 0.4rem 0 0.6rem; letter-spacing: -0.02em; color: var(--ink); }
+h1 em { font-style: italic; font-weight: 300; color: var(--accent); }
+.sub { font-family: 'Manrope', sans-serif; font-size: 15px; line-height: 1.6; color: var(--ink-2); max-width: 680px; }
+
+.divider { height: 1px; background: var(--border); margin: 2rem 0; }
+
+.month-tabs { display: flex; gap: 4px; padding: 4px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; margin: 2rem 0 1.5rem; flex-wrap: wrap; }
+.month-tab { font-family: 'Fraunces', serif; font-size: 15px; padding: 10px 18px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; border-radius: 3px; transition: all 0.15s; font-weight: 400; letter-spacing: -0.005em; }
+.month-tab:hover:not(:disabled) { background: var(--bg-surface); }
+.month-tab.active { background: var(--ink); color: var(--bg-paper); }
+.month-tab:disabled { color: var(--ink-4); cursor: not-allowed; font-style: italic; }
+.month-tab small { font-family: 'Manrope', sans-serif; font-size: 11px; opacity: 0.7; margin-left: 6px; letter-spacing: 0; }
+
+.month-context { font-family: 'Manrope', sans-serif; font-size: 13px; color: var(--ink-3); margin: 0 0 1.5rem; line-height: 1.5; font-style: italic; }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; margin: 1.5rem 0 2rem; }
+.stat-l { font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: 0.4rem; }
+.stat-v { font-family: 'Fraunces', serif; font-size: 2rem; line-height: 1; font-weight: 400; color: var(--ink); letter-spacing: -0.02em; }
+.stat-v small { font-family: 'Manrope', sans-serif; font-size: 12px; color: var(--ink-3); font-weight: 400; letter-spacing: 0; margin-left: 4px; }
+
+.section-label { font-family: 'Fraunces', serif; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 0.8rem; }
+
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 2rem; }
+.control-group h3 { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 0.7rem; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; border: 1px solid var(--border); border-radius: 3px; padding: 3px; background: var(--bg-surface); }
+.seg button { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 500; padding: 6px 10px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; border-radius: 2px; transition: all 0.15s; flex: 1; min-width: 60px; }
+.seg button:hover { background: rgba(0,0,0,0.04); }
+.seg button.active { background: var(--ink); color: var(--bg-paper); }
+
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-surface); transition: all 0.15s; user-select: none; }
+.toggle:hover { border-color: var(--border-strong); }
+.toggle.on { background: var(--ink); color: var(--bg-paper); border-color: var(--ink); }
+.toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-4); }
+.toggle.on .toggle-dot { background: var(--bg-paper); }
+
+.dist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 2rem; margin-bottom: 1.5rem; }
+.dist-block { }
+.dist-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
+.dist-title { font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.dist-bar { display: flex; height: 12px; border-radius: 2px; overflow: hidden; background: var(--bg-surface); border: 1px solid var(--border); margin-bottom: 0.5rem; }
+.dist-seg { transition: opacity 0.15s; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-family: 'Manrope', sans-serif; font-size: 11px; padding: 4px 9px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 14px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); }
+.chip:hover { border-color: var(--border-strong); background: var(--bg-surface); }
+.chip.on { background: var(--ink); color: var(--bg-paper); border-color: var(--ink); }
+.chip-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.chip-count { color: var(--ink-3); font-weight: 400; margin-left: 2px; }
+.chip.on .chip-count { color: rgba(255,255,255,0.7); }
+
+.active-row { display: flex; align-items: center; gap: 8px; min-height: 32px; margin: 1.25rem 0 0.75rem; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); }
+.active-pill { background: var(--accent); color: var(--bg-paper); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.active-pill-d { width: 7px; height: 7px; border-radius: 50%; background: var(--bg-paper); }
+.clear-btn { font-family: 'Manrope', sans-serif; font-size: 11px; background: transparent; border: 1px solid var(--border-strong); padding: 4px 12px; border-radius: 12px; color: var(--ink-2); cursor: pointer; }
+.clear-btn:hover { border-color: var(--ink); }
+
+.cal-wrap { margin-top: 0.5rem; }
+.dow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
+.dow div { font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); text-align: center; font-weight: 500; padding: 4px 0; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.day { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; min-height: 130px; display: flex; flex-direction: column; position: relative; transition: all 0.2s ease; overflow: hidden; }
+.day:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+.day.sel { outline: 2px solid var(--ink); outline-offset: 1px; }
+.day.dim { opacity: 0.18; }
+.day.rest { background: transparent; border: 1px dashed var(--border-strong); }
+.day.rest:hover { background: var(--rest-pattern); }
+.day.rest.hidden { display: none; }
+.day.empty { background: transparent; border: none; cursor: default; min-height: 0; }
+.day-inner { padding: 10px 11px 6px; flex: 1; display: flex; flex-direction: column; }
+.day-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; gap: 4px; }
+.day-n { font-family: 'Fraunces', serif; font-size: 1.4rem; line-height: 0.9; font-weight: 400; letter-spacing: -0.02em; }
+.day-theme { font-family: 'Manrope', sans-serif; font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.45); font-weight: 600; margin-top: 5px; }
+.day-icons { display: flex; gap: 4px; align-items: center; }
+.day-pdot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(255,255,255,0.8); }
+.day-note { width: 10px; height: 10px; border-radius: 2px; background: var(--accent-soft); flex-shrink: 0; opacity: 0.8; }
+.day-short { font-family: 'Manrope', sans-serif; font-size: 12px; line-height: 1.35; flex: 1; color: var(--ink); margin-top: 6px; font-weight: 500; }
+.day-bot { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; gap: 6px; }
+.day-pill { font-family: 'Manrope', sans-serif; font-size: 9.5px; font-weight: 600; padding: 2px 6px; border-radius: 3px; background: rgba(255,255,255,0.6); color: rgba(0,0,0,0.7); letter-spacing: 0.05em; }
+.day-tier { height: 4px; width: 100%; }
+.rest-inner { padding: 12px 11px; flex: 1; display: flex; flex-direction: column; }
+.rest-n { font-family: 'Fraunces', serif; font-size: 1.3rem; line-height: 0.9; font-weight: 300; color: var(--ink-4); }
+.rest-l { font-family: 'Manrope', sans-serif; font-size: 10px; color: var(--ink-4); margin-top: auto; letter-spacing: 0.04em; font-style: italic; }
+.day-mark { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); font-family: 'Manrope', sans-serif; font-size: 8.5px; font-weight: 600; background: var(--accent); color: var(--bg-paper); padding: 2px 7px; border-radius: 10px; letter-spacing: 0.04em; white-space: nowrap; }
+
+.detail { margin-top: 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; }
+.dt-eyebrow { font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.4rem; }
+.dt-title { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 400; line-height: 1.15; letter-spacing: -0.015em; margin-bottom: 0.4rem; color: var(--ink); }
+.dt-meta-tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 1rem 0 1.5rem; }
+.dt-tag { font-family: 'Manrope', sans-serif; font-size: 11px; padding: 4px 11px; border-radius: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.dt-tag-d { width: 7px; height: 7px; border-radius: 50%; }
+
+
+.dt-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem 2rem; margin-bottom: 1.5rem; padding: 1.25rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.meta-row .meta-label { font-family: 'Manrope', sans-serif; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 4px; }
+.meta-row .meta-value { font-family: 'Manrope', sans-serif; font-size: 14px; color: var(--ink); display: inline-flex; align-items: center; gap: 7px; font-weight: 500; }
+.meta-sq { width: 9px; height: 9px; border-radius: 2px; }
+.meta-cr { width: 9px; height: 9px; border-radius: 50%; }
+.cap-eyebrow { font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; }
+.cap-copy { font-family: 'Manrope', sans-serif; font-size: 11px; background: transparent; border: 1px solid var(--border-strong); padding: 4px 10px; border-radius: 12px; color: var(--ink-2); cursor: pointer; }
+.cap-copy:hover { border-color: var(--ink); }
+.caption { background: var(--bg-surface); border-left: 3px solid var(--accent); padding: 1.2rem 1.4rem; font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.7; color: var(--ink); border-radius: 0 4px 4px 0; }
+.hashtags { display: block; margin-top: 0.8rem; font-family: 'Manrope', sans-serif; font-size: 13px; color: var(--accent); line-height: 1.5; font-weight: 500; }
+.visual { margin-top: 1.25rem; display: flex; gap: 12px; align-items: flex-start; font-family: 'Manrope', sans-serif; font-size: 13px; color: var(--ink-2); line-height: 1.6; }
+.visual-label { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; min-width: 80px; padding-top: 2px; }
+.visual > span:last-child { white-space: pre-wrap; flex: 1; }
+
+
+.rest-detail { padding: 2rem 0; text-align: center; }
+.rest-detail .rd-title { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.4rem; color: var(--ink); }
+.rest-detail .rd-sub { font-size: 14px; color: var(--ink-3); max-width: 460px; margin: 0 auto 1.5rem; line-height: 1.6; }
+
+footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: 'Manrope', sans-serif; font-size: 12px; color: var(--ink-3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.export-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+.export-btn { font-family: 'Manrope', sans-serif; font-size: 12px; background: var(--bg-card); border: 1px solid var(--border-strong); padding: 6px 14px; border-radius: 14px; color: var(--ink-2); cursor: pointer; }
+.export-btn:hover { border-color: var(--ink); background: var(--bg-surface); }
+
+@media (max-width: 800px) {
+  body { padding: 1.5rem 1rem; }
+  .stats { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .controls { grid-template-columns: 1fr; gap: 1.25rem; }
+  .dist { grid-template-columns: 1fr; }
+  .dt-meta { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .day { min-height: 88px; }
+  .day-inner { padding: 7px 7px 4px; }
+  .day-n { font-size: 1.1rem; }
+  .day-short { font-size: 10.5px; }
+  .day-theme { font-size: 8.5px; }
+}
+@media (max-width: 540px) {
+  .dt-meta { grid-template-columns: 1fr; }
+  .dow div { font-size: 9.5px; }
+  .day { min-height: 76px; }
+  .day-short { font-size: 9.5px; }
+}
+
+@media print {
+  body { padding: 1cm; background: white; }
+  .controls, footer, .clear-btn, .month-tabs, .cap-copy { display: none; }
+  .day { break-inside: avoid; }
+  .day:hover { transform: none; }
+  .detail { page-break-before: always; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="brand-mark">Chocolate Barr's Candies · Stratford</div>
+  <h1>Monthly <em>marketing planner</em></h1>
+  <p class="sub">A working June calendar built around the people who walk through the door. The customer is the hero, Derek and Jacqueline are the trusted guides, and the team makes it happen. Twenty posts, ten quiet days, full shoot direction on every post so the team knows what to capture and when to post. Click any day for the caption and the visual brief.</p>
+</header>
+
+<div class="month-tabs" id="month-tabs"></div>
+<div class="month-context" id="month-context"></div>
+
+<div class="stats" id="stats"></div>
+
+<div class="divider"></div>
+
+<div class="section-label">Display controls</div>
+<div class="controls">
+  <div class="control-group">
+    <h3>Colour calendar by</h3>
+    <div class="seg" id="seg-color">
+      <button data-v="gr" class="active">Content group</button>
+      <button data-v="pl">Pillar</button>
+      <button data-v="pe">Persona</button>
+      <button data-v="he">Hero moment</button>
+      <button data-v="tr">Tier</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <h3>Show on each cell</h3>
+    <div class="toggles" id="toggles">
+      <span class="toggle on" data-t="theme"><span class="toggle-dot"></span>Day theme</span>
+      <span class="toggle on" data-t="persona"><span class="toggle-dot"></span>Persona dot</span>
+      <span class="toggle on" data-t="pillar"><span class="toggle-dot"></span>Pillar code</span>
+      <span class="toggle on" data-t="tier"><span class="toggle-dot"></span>Tier bar</span>
+      <span class="toggle on" data-t="rest"><span class="toggle-dot"></span>Quiet days</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Balance &amp; filters · click any chip to filter</div>
+<div class="dist" id="dist"></div>
+
+<div class="active-row" id="active-row"><span>No filters active.</span></div>
+
+<div class="cal-wrap">
+  <div class="dow">
+    <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+  </div>
+  <div class="cal" id="cal"></div>
+</div>
+
+<div class="detail" id="detail"></div>
+
+<footer>
+  <div>Chocolate Barr's Candies · Stratford, Ontario · roughly 5 posts a week, 20 a month</div>
+  <div class="export-controls">
+    <button class="export-btn" onclick="window.print()">Print</button>
+  </div>
+</footer>
+
+</div>
+
+<script>
+const G = {
+  product:    {l:"Product",     bg:"#FAECE7", dot:"#D85A30", dark:"#993C1D"},
+  process:    {l:"Process",     bg:"#FAEEDA", dot:"#EF9F27", dark:"#854F0B"},
+  people:     {l:"People",      bg:"#EEEDFE", dot:"#7F77DD", dark:"#3C3489"},
+  customer:   {l:"Customer",    bg:"#FBEAF0", dot:"#D4537E", dark:"#72243E"},
+  community:  {l:"Community",   bg:"#EAF3DE", dot:"#639922", dark:"#3B6D11"},
+  education:  {l:"Education",   bg:"#E6F1FB", dot:"#378ADD", dark:"#0C447C"},
+  engagement: {l:"Engagement",  bg:"#E1F5EE", dot:"#1D9E75", dark:"#0F6E56"},
+  commercial: {l:"Commercial",  bg:"#F1EFE8", dot:"#888780", dark:"#444441"}
+};
+const P = {
+  MH:{l:"Heritage",   c:"#BA7517", bg:"#FAEEDA", dark:"#854F0B"},
+  PC:{l:"Craft",      c:"#5F5E5A", bg:"#F1EFE8", dark:"#2C2C2A"},
+  CI:{l:"Innovation", c:"#534AB7", bg:"#EEEDFE", dark:"#3C3489"},
+  AE:{l:"Excellence", c:"#0F6E56", bg:"#E1F5EE", dark:"#085041"},
+  CC:{l:"Community",  c:"#3B6D11", bg:"#EAF3DE", dark:"#27500A"}
+};
+const PE = {
+  local:   {l:"Local",     c:"#185FA5", bg:"#E6F1FB", dark:"#0C447C"},
+  tourist: {l:"Tourist",   c:"#BA7517", bg:"#FAEEDA", dark:"#854F0B"},
+  gift:    {l:"Gift/B2B",  c:"#993556", bg:"#FBEAF0", dark:"#72243E"},
+  foodie:  {l:"Foodie",    c:"#3B6D11", bg:"#EAF3DE", dark:"#27500A"}
+};
+const H = {
+  date_night:   {l:"Date night",   c:"#D85A30", bg:"#FAECE7", dark:"#993C1D"},
+  get_well:     {l:"Get-well",     c:"#1D9E75", bg:"#E1F5EE", dark:"#0F6E56"},
+  host:         {l:"Host",         c:"#EF9F27", bg:"#FAEEDA", dark:"#854F0B"},
+  just_because: {l:"Just-because", c:"#7F77DD", bg:"#EEEDFE", dark:"#3C3489"},
+  gift:         {l:"Gift",         c:"#D4537E", bg:"#FBEAF0", dark:"#72243E"},
+  welcome:      {l:"Welcome",      c:"#378ADD", bg:"#E6F1FB", dark:"#0C447C"},
+  brand:        {l:"Brand story",  c:"#888780", bg:"#F1EFE8", dark:"#2C2C2A"}
+};
+const T = {
+  T1:{l:"Anchor",   c:"#1D9E75", bg:"#E1F5EE", dark:"#085041"},
+  T2:{l:"Regular",  c:"#7F77DD", bg:"#EEEDFE", dark:"#3C3489"},
+  T3:{l:"Periodic", c:"#888780", bg:"#F1EFE8", dark:"#2C2C2A"},
+  T4:{l:"Seasonal", c:"#EF9F27", bg:"#FAEEDA", dark:"#633806"}
+};
+const DICTS = {gr:G, pl:P, pe:PE, he:H, tr:T};
+const LABELS = {gr:"Content groups", pl:"Messaging pillars", pe:"Persona type", he:"Hero moments", tr:"Tiers"};
+const FIELD_LABEL = {gr:"Group", pl:"Pillar", pe:"Persona", he:"Hero", tr:"Tier"};
+
+// MONTHS DATA
+const months = {
+  jun: {
+    name: "June 2026",
+    short: "Jun",
+    context: "Pride Month. Father's Day Jun 21. Canada Day prep. 20 posts written like real people talking, with Derek, Jacqueline, and the team they love working with.",
+    startOn: 0, // Mon
+    totalDays: 30,
+    days: [
+      {n:1,act:1,d:"Mon, Jun 1",t:"Make Monday Sweeter",ty:"Monthly opener",sh:"Welcome to June",tr:"T2",fm:"Single-image feed",gr:"commercial",pl:"CC",pe:"local",he:"welcome",go:"Engage with messaging",cp:"Welcome to June at the shop. The festival is in full swing, the summer flavours are coming back into the case this week, and Father's Day is three weeks away. That gives us a little time to figure out which dad gets which box.\n\nThis is our 22nd June together. The rhythm hasn't really changed: locals stopping in on weekday afternoons, festival-goers between matinees and evening shows, Saturday mornings for whoever gets here first. What's changed are the conversations and the people who keep coming back to see us.\n\nCustom Father's Day orders are open as of today. All of us at the shop are here 9 to 5:30 every day this week. We'd love to see you.",hs:"#ChocolateBarrs #StratfordOntario #DowntownStratford #ShopLocal",vi:"GOAL: Welcoming, anticipatory. Set the tone that this place feels good in June.\n\nSHOT TYPE: Single image, 4:5 vertical for IG feed (crops to 1:1 if needed).\n\nCOMPOSITION (pick whichever works best the morning of):\n  • Storefront from across George St, morning sun catching the window\n  • Interior looking outward, counter in soft focus foreground, street through the window\n  • Case from above, summer-season pieces just being arranged\n\nLIGHTING: 9 to 11am window light. Turn off the overhead fluorescents for warmth.\n\nPROPS / STAGING:\n  • One or two fresh boxes on the counter, ready for the day\n  • Summer-season pieces visible in the case\n  • Remove: laptops, phones, price stickers, clutter\n\nMOOD: Quiet anticipation. Lived-in warmth. Settled.\n\nCAPTURE TO PICK FROM (shoot all four):\n  1. Wide storefront from across the street\n  2. Interior at customer eye level\n  3. Case from directly above\n  4. Hands placing a single truffle into a box\n\nAVOID: hard direct sun · obvious posing · staff faces (place-focused this post) · anything that reads as 'shot for Instagram'\n\nCAPTION OVERLAY: None.\n\nPOST: Mon Jun 1, 9:00 to 10:00am. No tags needed."},
+      {n:2,act:1,d:"Tue, Jun 2",t:"Treat Yourself Tuesday",ty:"Product spotlight",sh:"Honey peppercorn",tr:"T1",fm:"Single-image feed",gr:"product",pl:"PC",pe:"local",he:"just_because",go:"Engage with messaging",cp:"There's a truffle in the case that asks a little curiosity from you. Honey and black peppercorn, together in the same ganache, wrapped in a 70% dark shell.\n\nWe developed this one because we wanted to eat it ourselves. The people who try it tend to come back for two more. It's warm at the back of your throat in a way you really do need to taste to understand.\n\nFresh batch in the case today.",hs:"#ChocolateBarrs #HoneyPeppercorn #StratfordOntario #ArtisanChocolate",vi:"GOAL: Spark curiosity for a flavour that doesn't market itself. Position the customer as the brave one who tried something unexpected.\n\nSHOT TYPE: Single image, 4:5 vertical, macro product hero.\n\nCOMPOSITION: Top-down at about 15° tilt on dark marble or slate. Truffle in centre-third with negative space around it for the eye to rest.\n\nLIGHTING: Soft natural side light. Late morning, north-facing window if available. Aim for one soft shadow and one specular highlight on the truffle's surface.\n\nPROPS / STAGING:\n  • One pristine truffle, no fingerprints\n  • 3 to 5 black peppercorns scattered in foreground, slightly out of focus\n  • Optional: a small drizzle of honey at the edge of frame\n  • Background: dark wood, slate, or deep matte stone\n\nMOOD: Quietly luxurious. Inviting curiosity. Confident.\n\nCAPTURE TO PICK FROM:\n  1. Hero shot, full truffle with peppercorns scattered\n  2. Broken in half, ganache centre visible\n  3. Chocolatier's fingertips placing the truffle on the cooling table (just the edge of the hand)\n\nAVOID: cluttered background · harsh overhead light · visible plastic · anything that pulls the eye from the truffle\n\nCAPTION OVERLAY: None.\n\nPOST: Tue Jun 2, 11:00am to 12:00pm (pre-lunch appetite window)."},
+      {n:3,act:1,d:"Wed, Jun 3",t:"Workshop Wednesday",ty:"Workshop process · Derek",sh:"At the cooling table",tr:"T1",fm:"Reel · 25 sec",gr:"process",pl:"MH",pe:"foodie",he:"brand",go:"Amplify awareness",cp:"There's a marble cooling table in our workshop that's shaped every truffle, every Chocolate Mintie, every box of caramels we've ever sent home with a customer. It's over a hundred years old.\n\nWe brought it through every move the shop has made, because there was no replacing it. Chocolate tempers on cool stone the way it has for generations of confectionery. Three temperatures in order: 45 down to 27, back up to 32, with no shortcuts in between.\n\nThat clean snap you hear when you break a piece of real chocolate? That's where it comes from. From this table, through these hands, into yours.\n\nDerek",hs:"#WorkshopWednesday #ChocolateBarrs #StratfordOntario #HowItsMade #CraftChocolate",vi:"GOAL: Show that what the customer takes home is shaped by hands, care, and a hundred years of stone. Make the cooling table feel reverent.\n\nSHOT TYPE: Reel, 9:16 vertical, 25 seconds total.\n\nBEAT SHEET:\n  0:00 to 0:03. HOOK: tight on the marble surface, subtle texture visible, slow camera push forward.\n  0:03 to 0:08. REVEAL: pull back to chocolate being worked across the cooling table. Sweeping spatula motion. No face.\n  0:08 to 0:14. PROCESS: cut to thermometer at 45°C, then cool to 27°C, then back up to 32°C. White text overlay for each temp briefly, top of frame.\n  0:14 to 0:18. DETAIL: tight on the ribboning chocolate as the shine develops.\n  0:18 to 0:22. PAYOFF: close-up of a finished piece. Fingers pick it up. Audible snap.\n  0:22 to 0:25. CLOSE: piece settles back on the cooling table. Hold. End frame with 'Derek' bottom-right.\n\nLIGHTING: Warm workshop daylight. Overheads off. Marble should look cool and luminous; chocolate should look glossy.\n\nAUDIO: No talking, just natural workshop sounds. The scrape of spatula, the snap at 0:21. Either silence underneath or a low-mood instrumental at low volume. Avoid vocal tracks.\n\nB-ROLL TO CAPTURE (use as cutaways):\n  • Wide of Derek at the cooling table\n  • Slow-motion of the chocolate ribboning\n  • Hands wiping the table clean at the end\n\nTEXT OVERLAYS:\n  • Temps at 0:08, 0:11, 0:14. White, small, top-of-frame on a thin dark bar.\n  • End frame: 'Derek' small in bottom-right.\n\nAVOID: vocal music · cheesy before/after reveals · over-stylized editing · face on camera unless Derek is comfortable\n\nPOST: Wed Jun 3, 12:00pm (Workshop Wednesday lunch scroll). Pin to Reels tab for the month."},
+      {n:4,act:0,d:"Thu, Jun 4"},
+      {n:5,act:0,d:"Fri, Jun 5"},
+      {n:6,act:1,d:"Sat, Jun 6",t:"Sweet Saturday",ty:"Pride Month",sh:"Pride flag is up",tr:"T4",fm:"Single-image feed",gr:"community",pl:"CC",pe:"local",he:"welcome",go:"Engage with messaging",cp:"The Pride flag is in our window for the month, as it has been every June for years now. Everyone is welcome at this shop. Always has been, always will be.\n\nStratford is busy today: matinee crowds rolling through downtown, patios filling up, the kind of Saturday June was made for. We'd love to see you between now and 5:30.\n\nHappy Pride from everyone at Chocolate Barr's.",hs:"#PrideMonth #StratfordOntario #ChocolateBarrs #DowntownStratford #LoveIsLove",vi:"GOAL: Quiet, authentic Pride acknowledgment. The flag has been up every June for years. Communicate that this isn't performative.\n\nSHOT TYPE: Single image, 4:5 vertical.\n\nCOMPOSITION: Workshop exterior with Pride flag visible in the window. Heritage building architecture (the maple-framed windows) visible for context. Frame the flag in the upper third with the storefront grounding the lower two thirds.\n\nLIGHTING: Late morning, soft natural light. Ideally an overcast or partly cloudy day so colours read well without blowing out the flag's rainbow.\n\nPROPS / STAGING: None. This should look real and unstaged. If the case is visible through the window, that's a bonus.\n\nMOOD: Welcoming. Settled. The feeling of 'we've always been here for you.'\n\nCAPTURE TO PICK FROM:\n  1. Wide exterior with flag and full storefront\n  2. Medium with flag and the workshop sign\n  3. Detail: flag silhouetted from inside, light coming through\n  4. Through-the-window interior shot showing the flag from the customer's POV looking out\n\nAVOID: heavy filters that wash out the flag · over-staging · rainbow decorations beyond the flag (less is more) · anything that reads as a campaign\n\nCAPTION OVERLAY: None.\n\nPOST: Sat Jun 6, 10:00 to 11:00am (Saturday matinee morning). Optionally repost to Story with location tag."},
+      {n:7,act:1,d:"Sun, Jun 7",t:"Sunday Sweets & Stories",ty:"Founder story · Derek",sh:"How I got here",tr:"T3",fm:"Carousel · 4 slides",gr:"people",pl:"MH",pe:"local",he:"brand",go:"Engage with messaging",cp:"In 1997 I was supposed to be a mining engineer.\n\nFinish school, work somewhere remote, settle down later. That was the plan.\n\nThen Bre-X happened. If you don't remember the story, it was a Canadian mining fraud that took down a lot of careers at once. Mine was one of them, before it had really started.\n\nSo I came home to Stratford. Rheo Thompson, the chocolate maker, was a family friend who'd hired me at his shop through high school. He told me to come back and figure things out. I was there from 1999 to 2003, which is also when I met Jacqueline.\n\nWe opened our own place in 2003. People sometimes ask if I miss mining. The honest answer is no, but the precision did come in handy.\n\nTwenty-two years later, the part of this I couldn't have planned, and the best part of it, is the customers we've gotten to make chocolate for. The regulars. The festival-goers who've been coming since their twenties. The families bringing in the next generation. They're why we get to keep doing this.\n\nDerek",hs:"#SundayStories #ChocolateBarrs #StratfordOntario #DerekBarr #BehindTheBrand",vi:"GOAL: Build trust through the founder story. End on the customers being the heart, so the whole story lands as 'here's why you can trust us with what matters to you.'\n\nSHOT TYPE: Carousel, 4 slides, 4:5 vertical, consistent ratio across all.\n\nSLIDE BY SLIDE:\n  SLIDE 1 (the hook): Derek in the workshop, three-quarter portrait. Looking slightly off-camera (not into lens). Warm overhead and side light. Tight crop showing him from chest up with workshop softly out of focus behind. This is the slide that needs to stop the scroll.\n  SLIDE 2 (the context): An archival photo if any exist. Mining-era Derek, or an early-workshop photo from 2003. If none exist, use a detail shot of the workshop in current use (the cooling table, a recipe card, an old menu).\n  SLIDE 3 (the pivot): Derek and Jacqueline together in the shop (recreated calmly, not posed). Could be them at the counter, or together over the cooling table. The 'we' moment of the story.\n  SLIDE 4 (the gratitude): Wide of the shop on a busy day. Customers in frame from behind (so faces aren't identifiable without consent), case visible, life happening. The visual close of 'and the best part.'\n\nLIGHTING: Warm, natural. Single soft key light if shooting in-shop. Late afternoon golden light is ideal for slides 1 and 3.\n\nPROPS / STAGING:\n  • Derek in a clean apron, not styled but neat\n  • Workshop visible but not staged. Actual current state.\n  • For slide 4: a real busy moment (Saturday early afternoon is best)\n\nMOOD: Earned warmth. Quiet pride. Gratitude.\n\nCONSENT NOTE: For any identifiable customers in slide 4, get verbal okay before posting.\n\nAVOID: over-staged 'corporate portrait' feel · stiff posing · trying to dramatize the Bre-X part visually (the story does that work, the image should be calm)\n\nCAPTION OVERLAY: 'Chapter 3' in small serif type, bottom-left of slide 1 only.\n\nPOST: Sun Jun 7, 6:00 to 7:00pm (Sunday evening reflective scroll window). Boost optional. This is a brand-building post worth small ad spend."},
+      {n:8,act:0,d:"Mon, Jun 8"},
+      {n:9,act:1,d:"Tue, Jun 9",t:"Treat Yourself Tuesday",ty:"Flagship product",sh:"The Chocolate Mintie",tr:"T1",fm:"Single-image feed",gr:"product",pl:"AE",pe:"tourist",he:"welcome",go:"Engage with messaging",cp:"First time at the shop? Or staring into the case wondering where to begin?\n\nStart with the Chocolate Mintie. Mint and dark chocolate, made fresh every week, almost always gone by the end of it. It's the piece we point everyone to when they don't know what to ask for, and the one that quietly keeps people coming back.\n\nWe hear the question often: are these the same as the Mint Smoothies up the street? They're not. Ours is our take on the same idea, made our way. Both belong in Stratford's chocolate story, and we're glad to be part of it.\n\nYours is on the counter today.",hs:"#TreatYourselfTuesday #ChocolateMintie #StratfordOntario #ChocolateBarrs #MustTry",vi:"GOAL: Welcome newcomers and tourists. Position the Chocolate Mintie as the safe-yet-special starting point.\n\nSHOT TYPE: Single image, 4:5 vertical, product hero with intimacy.\n\nCOMPOSITION: Single Chocolate Mintie, broken in half, both pieces in frame on dark wood or slate. Centre-third placement. The break-line should show the contrast between dark shell and lighter peppermint fondant centre.\n\nLIGHTING: Soft window light from the side. Late morning. The dark chocolate should not look dull or flat. Aim for a subtle gloss on the curved surface.\n\nPROPS / STAGING:\n  • One Chocolate Mintie, snapped cleanly in half\n  • Dark wood, slate, or deep matte stone background\n  • Optional: a small spray of fresh mint leaves at the edge of frame (just one or two leaves, not a bouquet)\n\nMOOD: Approachable. Iconic. Trusted classic.\n\nCAPTURE TO PICK FROM:\n  1. Hero, both halves side by side\n  2. Stack of three or four Minties on the cooling table\n  3. The Mintie being lifted from a kraft box at the counter\n  4. A customer's hand picking one up (just the hand, get consent)\n\nAVOID: anything resembling a candy bar wrapper · plastic · overhead fluorescents · over-styling with mint sprigs (one leaf is enough)\n\nCAPTION OVERLAY: None.\n\nPOST: Tue Jun 9, 11:00am to 12:00pm. Tag @visitstratford in the caption if posting after a tourist-heavy weekend."},
+      {n:10,act:1,d:"Wed, Jun 10",t:"Workshop Wednesday",ty:"Stratford story",sh:"Three shops, two blocks",tr:"T3",fm:"Carousel · 4 slides",gr:"community",pl:"CC",pe:"tourist",he:"welcome",go:"Amplify awareness",cp:"There's something Stratford does that most small towns simply don't: this little place has three chocolate shops within two blocks.\n\nPart of the reason is history. Stratford has been a chocolate town since at least the 1950s, and the locals have never shown any signs of slowing down. The other part is that this town genuinely loves to share its sweet tooth with whoever walks through it.\n\nWe share the block with Rheo Thompson Candies, where Derek worked before opening this shop in 2003, and Rocky Mountain Chocolate Factory. Three shops, three different approaches. You can walk all three on a single afternoon and be back at your car in under an hour.\n\nIf you're planning a chocolate walk through Stratford, save this. And tag whoever you'd take with you.",hs:"#StratfordOntario #DowntownStratford #VisitStratford #ChocolateBarrs #StratfordEats",vi:"GOAL: Position Stratford as a chocolate-walk destination. Generous to competitors. The customer becomes the friend with great taste who brought everyone here.\n\nSHOT TYPE: Carousel, 4 slides, 4:5 vertical.\n\nSLIDE BY SLIDE:\n  SLIDE 1 (hook): A hand-illustrated overhead map of the two-block area showing the three chocolate shops as small icons. Watercolour or pen-and-ink style. 'A Stratford Chocolate Walk' as a small title in serif type. This slide is what makes people swipe.\n  SLIDE 2: Photo of Chocolate Barr's storefront. Clean, head-on, with the sign visible.\n  SLIDE 3: Photo of Rheo Thompson Candies storefront (with their permission, ask first; the goodwill matters). Same head-on framing as slide 2 for cohesion.\n  SLIDE 4: Photo of Rocky Mountain Chocolate Factory storefront. Same framing.\n\nLIGHTING: Shoot all three storefronts within the same hour on the same day for matching light. Morning is best. Softer shadows, less foot traffic.\n\nPROPS / STAGING: None. Real storefronts, current state.\n\nMOOD: Pride in place. Generous. Conspiratorial, like sharing a secret you love.\n\nIMPORTANT: Reach out to Rheo Thompson Candies before this posts. Offer to credit them in the caption tag. They almost certainly say yes, but the courtesy matters and may earn a co-share.\n\nAVOID: any framing that looks competitive or comparative · price/value language · ranking ('the best of the three')\n\nCAPTION OVERLAY: Slide 1 title only. No text on slides 2 to 4.\n\nPOST: Wed Jun 10, 5:00 to 6:00pm (after-work scroll window, when people plan weekends). Tag both other shops in caption."},
+      {n:11,act:1,d:"Thu, Jun 11",t:"Thankful Thursday",ty:"In-store experience · Jacqueline",sh:"Saturdays at the shop",tr:"T2",fm:"Single-image feed",gr:"people",pl:"CC",pe:"local",he:"welcome",go:"Engage with messaging",cp:"My favourite hour at the shop is between 11 and 2 on a Saturday.\n\nThe festival crowd is mid-show, the locals are out doing their errands, and somewhere in that stretch there's always a moment when every conversation in the place is happening at once. Someone choosing a Father's Day box, two regulars catching up, a tourist trying to decide whether to take home one Chocolate Mintie or twelve.\n\nPeople sometimes ask what my job is, since Derek is the chocolatier. The honest answer is that I make sure that when you walk in, whether I'm at the counter or one of our team is, the whole thing feels less like a transaction and more like coming over. That's most of what I do, and what our team is here to keep doing.\n\nIf you can't make it in, we'll come to you. Free delivery anywhere in Stratford, no minimum, no fuss. It's a quiet thing we've always done, and one we really love doing.\n\nJacqueline",hs:"#ThankfulThursday #ChocolateBarrs #StratfordOntario #ShopLocal #FreeDelivery",vi:"GOAL: Show the experience the customer can expect. Jacqueline is the trusted host. The team is part of that hosting.\n\nSHOT TYPE: Single image, 4:5 vertical.\n\nCOMPOSITION: Jacqueline at the counter, mid-conversation. Candid, not posed. Three-quarter framing. Counter visible in lower third, Jacqueline in mid-frame, shop softly out of focus behind. Ideally captures her actually doing the work of welcoming someone.\n\nLIGHTING: Natural window light from the front of the shop. Late morning or early afternoon. Golden tones if possible.\n\nPROPS / STAGING:\n  • Jacqueline in a clean apron, not styled\n  • A box on the counter she might be passing across\n  • Shop in working condition, not pre-cleaned for the camera\n\nMOOD: Hosting. Warm. The opposite of a transaction.\n\nCONSENT NOTE: If a customer is in frame, get verbal okay before posting (or shoot from behind or over-shoulder so they're not identifiable).\n\nCAPTURE TO PICK FROM:\n  1. Hero, Jacqueline mid-conversation across the counter\n  2. Wider, Jacqueline plus a team member, both at work\n  3. Detail, Jacqueline's hands tying ribbon on a box\n  4. Through-the-doorway, looking in from the street, Jacqueline and the team visible\n\nAVOID: stiff posing · forced smiles · empty shop (the energy of the post is busy-Saturday) · obvious 'business owner headshot' framing\n\nCAPTION OVERLAY: None.\n\nPOST: Thu Jun 11, 7:00 to 8:00pm (evening scroll). This one performs well on Stories too. Repost a behind-the-scenes clip of the same moment to Story with a 'Saturdays at the shop' sticker."},
+      {n:12,act:1,d:"Fri, Jun 12",t:"Finally Friday",ty:"Father's Day gift guide",sh:"Three boxes for Father's Day",tr:"T4",fm:"Carousel · 5 slides",gr:"commercial",pl:"CI",pe:"gift",he:"gift",go:"Drive store visits",cp:"Nine days until you become the one who got Dad exactly right this year.\n\nWe've built three gift boxes, one for each kind of dad you might be shopping for, and you can swap anything in or out to make his more his.\n\n🥃 The Bold One. Whiskey truffles, dark chocolate-covered hot pepper, salted caramels. For the dad whose tastes lean toward the surprising.\n\n🍫 The Classic. Milk chocolate caramels, marzipan, chocolate-covered ginger. For the dad who knows exactly what he likes and rarely wavers.\n\n✨ The Curious. Balsamic truffle, honey peppercorn, lavender, Chocolate Minties. For the dad who's ready for something a little less expected.\n\nCustom orders by Tuesday for Sunday pickup. We close Saturday at 5:30.\n\nWhich one is his?",hs:"#FinallyFriday #FathersDay #ChocolateBarrs #StratfordOntario #GiftIdeas",vi:"GOAL: Make the customer feel they're about to win Father's Day. The boxes are tools, not the heroes.\n\nSHOT TYPE: Carousel, 5 slides, 4:5 vertical, identical framing across slides 2 to 4 for cohesion.\n\nSLIDE BY SLIDE:\n  SLIDE 1 (hook): All three boxes together on a single surface (oak counter or linen), top-down, evenly spaced. This is the 'three options' visual that gets the swipe.\n  SLIDE 2, The Bold One: One box centred, three-quarter overhead, styled with a tumbler of amber liquid (cold-brew works visually, no actual whisky needed) and a soft hand-towel in deep blue. Small handwritten card visible: 'The Bold One.'\n  SLIDE 3, The Classic: Same framing as slide 2. Styled with a folded newspaper (a Saturday classic), a coffee cup, and a small handwritten card: 'The Classic.'\n  SLIDE 4, The Curious: Same framing. Styled with a sprig of fresh lavender and a small espresso cup, card: 'The Curious.'\n  SLIDE 5: Pickup info on a small chalkboard or kraft card: 'Custom orders by Tuesday · Sunday pickup · Closed Saturday 5:30.' Or photograph the actual order book on the counter for warmth.\n\nLIGHTING: Natural window light, late afternoon golden. Same time of day across all five slides for consistency.\n\nPROPS / STAGING: As above per slide. Use real ribbon, kraft paper, and the actual handwritten cards (Jacqueline's handwriting if possible. It adds warmth).\n\nMOOD: Curated but warm. Like opening a present, not browsing a catalogue.\n\nCAPTURE EXTRA: Get a few candids of the team building the boxes. Useful for Story reposts later in the week.\n\nAVOID: stark commercial product-shot styling · price tags or numbers in frame · cluttered props · stock-photo whisky bottle (use a tumbler, not a bottle)\n\nCAPTION OVERLAY: Box names appear on slides 2, 3, 4 via the handwritten cards in the styling. No digital text overlays needed.\n\nPOST: Fri Jun 12, 4:00 to 5:00pm (Friday afternoon, gift-planning energy). Pin to top of profile for the week leading into Father's Day."},
+      {n:13,act:1,d:"Sat, Jun 13",t:"Sweet Saturday",ty:"Stratford itinerary",sh:"A Stratford Saturday",tr:"T2",fm:"Pinterest pin + Reel",gr:"community",pl:"CC",pe:"tourist",he:"welcome",go:"Amplify awareness",cp:"If you're coming to Stratford for the festival on a Saturday, here's how a few of our locals do it:\n\n9am: Start with us. We open before most of downtown, and you'll want chocolate tucked away for after the show.\n10:30: Coffee at [partner].\n12:30: Lunch at [partner], on the patio if the weather is kind.\n2pm: Matinee at the festival.\nAfter the curtain: Walk back to your car the long way along the Avon. That's when you reach for the chocolate.\n\nThe day is best done slowly. Save this for your next visit, and bring whoever makes a perfect Stratford Saturday with you.",hs:"#SweetSaturday #StratfordOntario #VisitStratford #StratfordFestival #DayTrip",vi:"GOAL: Position the customer as the friend with the best taste in towns. The itinerary is the gift they get to share.\n\nTWO ASSETS: A Pinterest pin (1000×1500, vertical) AND a companion Reel (9:16, 15 sec).\n\nPINTEREST PIN:\n  • Hand-illustrated overhead map of the five stops, watercolour style\n  • Each stop numbered with a small icon (truffle for stop 1, cup for 2, fork for 3, theatre mask for 4, swan for 5)\n  • Title at top in serif: 'A Stratford Saturday'\n  • Subtitle: 'How locals do it'\n  • Save-this CTA at bottom: 'Save for your next visit'\n  • Soft warm palette. Cream background, deep brown ink, warm accent tones.\n\nREEL (15 sec):\n  0:00 to 0:02. Hand opening a kraft box on a wooden counter, single truffle visible inside.\n  0:02 to 0:05. Box closing, then a hand picking it up and slipping it into a tote bag.\n  0:05 to 0:08. Walking shot (low, around knee-height) following the tote down the sidewalk along George St.\n  0:08 to 0:11. Quick cuts: coffee being poured, plates at a patio, theatre marquee (only if you can shoot with permission, otherwise skip).\n  0:11 to 0:14. Avon river walk at golden hour, swans in distance.\n  0:14 to 0:15. Hand reaching into tote, pulling truffle out, taking a bite. End frame.\n\nLIGHTING: Golden hour. Shoot late afternoon for the river-walk scenes. The box scenes can be shot earlier.\n\nAUDIO: Soft instrumental, acoustic guitar or piano. No vocals. Light, walking-pace tempo.\n\nMOOD: Slow-savoured day. Quiet pride in being a local who knows.\n\nAVOID: rushed cuts · over-busy frames · explicit branding of partner businesses without permission · shots that look like ads\n\nIMPORTANT: Identify the partner coffee and lunch spots before shooting. Coordinate with them. They'll likely co-share if they're tagged.\n\nCAPTION OVERLAY: On the Reel, small text overlay for each beat: '9am' / '10:30' / '12:30' / '2pm' / 'After'\n\nPOST: Sat Jun 13, 8:00am (the morning of, to catch day-trip planners). Pin to Pinterest the same day."},
+      {n:14,act:1,d:"Sun, Jun 14",t:"Sunday Sweets & Stories",ty:"Heritage",sh:"22 years of chocolate",tr:"T3",fm:"Single-image feed",gr:"people",pl:"MH",pe:"local",he:"brand",go:"Spark conversations",cp:"It's been 22 years of making chocolate in this town. One shop move. The same marble cooling table. The same Chocolate Mintie recipe we opened with in 2003.\n\nThe lavender truffle is also the same recipe from that first year. It's been quietly polarizing customers ever since. You either love it or you don't, and we long ago stopped trying to predict who'll land where. (We love that part.)\n\nA lot has changed in 22 years. The team has grown. So has the catalogue. But the constant has been the people who keep walking in, some of you for over two decades now.\n\nIf you've been a customer for a while, we'd love to know how long. Drop the year you first walked in below. We always read every comment on this one.",hs:"#SundayStories #ChocolateBarrs #StratfordOntario #SinceTwoThousandThree #SmallBusiness",vi:"GOAL: Continuity and invitation. Make long-time customers feel seen and new ones feel part of something with a history.\n\nSHOT TYPE: Single image OR optional carousel of 2 slides (then-and-now diptych).\n\nOPTION A, DIPTYCH CAROUSEL (preferred if you have archival):\n  SLIDE 1: An early-2003-era shop photo (storefront or workshop interior). If colour, leave as-is. If black-and-white, leave as-is.\n  SLIDE 2: A current photo, framed identically to slide 1 wherever possible. Same angle, same approximate distance. The marble cooling table should be visible in both if you can manage it.\n\nOPTION B, SINGLE IMAGE (if no usable archival):\n  The current workshop, slightly elevated angle, showing the case, cooling table, and warmth of the space. Wide enough that the room reads, tight enough that detail matters.\n\nLIGHTING: Warm late-afternoon natural. Single soft key.\n\nPROPS / STAGING:\n  • Workshop in working condition\n  • A handful of Chocolate Minties visible somewhere in frame (continuity anchor)\n  • If diptych: try to match what's on the counter in both photos\n\nMOOD: Earned continuity. Quietly proud. Not nostalgic, but present-tense.\n\nCAPTURE TO PICK FROM:\n  1. The match-framed diptych pair (if archival available)\n  2. Wide of the current workshop\n  3. Detail of the marble cooling table with a fresh batch of Minties cooling on it\n  4. The team at work, mid-task, mid-conversation\n\nAVOID: heavy sepia or vintage filter · 'before and after' captioning that's too obvious · faces of staff or customers without consent\n\nCAPTION OVERLAY: For diptych, small '2003' and '2026' year markers, bottom-left of each slide.\n\nPOST: Sun Jun 14, 5:00 to 6:00pm (Sunday evening reflective window. Strong comment-driving slot). Reply to every single comment by hand within 24 hours. This is your highest-value engagement post of the month."},
+      {n:15,act:1,d:"Mon, Jun 15",t:"Make Monday Sweeter",ty:"Father's Day countdown",sh:"Six days to Father's Day",tr:"T4",fm:"Single-image feed",gr:"commercial",pl:"AE",pe:"gift",he:"gift",go:"Drive store visits",cp:"Six days until Father's Day. Here's the rhythm of the week ahead, if you're planning to come in.\n\nToday and tomorrow are the easiest days for a custom order. By midweek we'll need a day's lead time. By Friday the workshop will be deep in pack mode, and we'll only be able to take a few more requests.\n\nIf you're not sure what to get him, come in and tell us about him. Derek, Jacqueline, or one of our team will help you build the box that suits him best, and you'll walk out with the thing in hand. That's usually the best part of last-minute gift-giving anyway.",hs:"#MakeMondaySweeter #FathersDay #ChocolateBarrs #StratfordOntario #LastMinuteGifts",vi:"GOAL: Practical and reassuring. The customer is the planner. Make them feel ahead of it.\n\nSHOT TYPE: Single image, 4:5 vertical.\n\nCOMPOSITION: Workshop counter with hands actively building a custom box. The customer's perspective, looking down at hands at work. The selection of truffles in the box should be partially complete, with a few more being added.\n\nLIGHTING: Soft natural window light. Late morning to early afternoon. The chocolates should look glossy. The box should look warmly lit.\n\nPROPS / STAGING:\n  • One kraft Chocolate Barr's box, half-filled, on the counter\n  • A small tray of mixed truffles ready to be placed\n  • Hands actively at work (no faces needed)\n  • A small ribbon roll visible in the background\n  • Remove: phones, computers, anything that breaks the spell\n\nMOOD: Capable hands at the customer's service. Quiet competence.\n\nCAPTURE TO PICK FROM:\n  1. Hands placing a truffle into the box (the hero)\n  2. Wider view, counter, box, tray, ribbon\n  3. The customer's POV approaching the counter\n  4. A finished, tied box ready for handoff\n\nAVOID: rushed-looking hands · cluttered counter · overhead fluorescents · staged 'business is busy' theatre\n\nCAPTION OVERLAY: None.\n\nPOST: Mon Jun 15, 9:00 to 10:00am (Monday morning planning energy)."},
+      {n:16,act:0,d:"Tue, Jun 16"},
+      {n:17,act:1,d:"Wed, Jun 17",t:"Workshop Wednesday",ty:"Father's Day pack week · team",sh:"Three mornings until Sunday",tr:"T4",fm:"Reel · 30 sec",gr:"process",pl:"PC",pe:"gift",he:"gift",go:"Drive store visits",cp:"Three mornings from Father's Day, and the workshop is fully in the swing of it. Custom boxes lined up across the counter. Pre-built boxes ready behind the case. Ribbon being tied, cards being written, names being remembered.\n\nThis morning's list: [X custom boxes, X whiskey sets, a few corporate orders. Fill in actual count]. The team's been here since seven. Tomorrow and Sunday will look the same.\n\nIf you're picking up on Saturday afternoon, there may be a line. We'll be there, and we'll get to you. These mornings, the ones leading into Father's Day, are some of the most rewarding work all of us get to do all year.",hs:"#WorkshopWednesday #FathersDay #ChocolateBarrs #BehindTheSweets #PackWeek",vi:"GOAL: Show care behind the scenes. The customer's gift starts here, in many hands. No solo-Derek framing. This is the whole team.\n\nSHOT TYPE: Reel, 9:16 vertical, 30 seconds.\n\nBEAT SHEET:\n  0:00 to 0:03. HOOK: tight on a stack of finished kraft boxes, ribbon catching light. Slow camera dolly forward.\n  0:03 to 0:08. TEAM SHOT: wide of the workshop, multiple people at work. Derek at the cooling table, Jacqueline tying a ribbon, a team member writing a card. Visible motion in three places.\n  0:08 to 0:13. HANDS: cut quickly between three pairs of hands at three different tasks. Placing a truffle, tying a ribbon, writing a name on a card.\n  0:13 to 0:18. DETAIL: a tray of completed boxes being lifted and moved to the holding area.\n  0:18 to 0:23. COUNTER: handoff. A customer (back to camera, consent obtained) receiving a finished box across the counter.\n  0:23 to 0:28. WIDE: the shop from outside or just inside the door, busy and warm.\n  0:28 to 0:30. CLOSE: a single tied ribbon, slow zoom in, end frame.\n\nLIGHTING: Workshop daylight, overheads on this time (need brightness for action). Aim for early-morning natural light supplemented as needed.\n\nAUDIO: Natural workshop sounds. Paper rustling, ribbon being pulled, soft conversation underneath. Optional: light upbeat instrumental, no vocals.\n\nMOOD: Energetic but composed. Many hands working together. Customer-care made visible.\n\nCAPTURE EXTRA:\n  • B-roll of the order book on the counter, names visible (blur for posting)\n  • Close-up of hand-written cards being tucked into boxes\n  • The morning huddle if there is one\n\nCONSENT NOTE: For any customer in frame, get verbal okay or shoot from behind. For team members, get a blanket sign-off ahead of pack week.\n\nTEXT OVERLAYS: None. Let the work speak.\n\nAVOID: chaotic editing · solo-hero framing of any one team member · stressed energy (the post is about care, not rush) · vocal music tracks\n\nPOST: Wed Jun 17, 4:00 to 5:00pm (end-of-day Wednesday, perfect FOMO and urgency window for the weekend rush)."},
+      {n:18,act:0,d:"Thu, Jun 18"},
+      {n:19,act:1,d:"Fri, Jun 19",t:"Finally Friday",ty:"Father's Day last call",sh:"Two days to Sunday",tr:"T4",fm:"Story sequence · 3 frames",gr:"commercial",pl:"AE",pe:"gift",he:"gift",go:"Drive store visits",cp:"Father's Day is two days away. Here's where to find us.\n\nToday and tomorrow we're open until 5:30. Sunday we'll be here from 11 to 4.\n\nIf you'd like a custom box, the order needs to be in by 4pm Saturday so we can have it ready for Sunday morning. Pre-built boxes are on the counter and waiting any time you can stop by.\n\nIf you're weighing two options and can't decide, message us. A minute of conversation usually settles it, and saves you the second-guessing.",hs:"#FinallyFriday #FathersDay #ChocolateBarrs #StratfordOntario #LastCall",vi:"GOAL: Practical reassurance for last-minute planners. Customer is the hero who pulled it off.\n\nSHOT TYPE: Three-frame Story sequence, 9:16 vertical. Designed for sequential viewing in Stories.\n\nFRAME BY FRAME:\n  FRAME 1 (the where): Photo of the workshop counter from the customer's POV, with pre-built Father's Day boxes lined up. Text overlay top: 'Father's Day · 2 days'. Tap-to-continue indicator at bottom.\n  FRAME 2 (the when): A small chalkboard with hours written by hand: 'Fri & Sat · til 5:30 / Sun · 11 to 4'. Photographed against the actual shop wall. Text overlay: 'Open all weekend.'\n  FRAME 3 (the help): Photo of Jacqueline or a team member at the counter, smiling at the camera. Text overlay: 'Can't decide? DM us.' with a tap-up sticker linking to DM.\n\nLIGHTING: Soft natural. Same time of day across all three frames.\n\nPROPS / STAGING:\n  • Frame 1: clean counter, neatly stacked boxes\n  • Frame 2: a real chalkboard with the hours written in (not digital text. Handwritten is the move)\n  • Frame 3: a team member visible, comfortable, looking at lens\n\nMOOD: Warm reliability. The feeling of 'we've got you.'\n\nCAPTURE EXTRA: A short Reel cover image (a single box being lifted off the counter) for cross-posting.\n\nAVOID: rushed-energy framing · alarm-bell urgency · over-busy chalkboard\n\nCAPTION OVERLAYS: As listed in each frame, all in the brand's display font.\n\nPOST: Fri Jun 19, 9:00am as the Story. Pin the Story Highlight 'Father's Day' for the weekend. Cross-post Frame 1 as a feed post if engagement is needed."},
+      {n:20,act:0,d:"Sat, Jun 20"},
+      {n:21,act:1,d:"Sun, Jun 21",t:"Sunday Sweets & Stories",ty:"Father's Day",sh:"Happy Father's Day",tr:"T4",fm:"Carousel · 4 slides",gr:"commercial",pl:"CC",pe:"gift",he:"gift",go:"Spark conversations",cp:"Happy Father's Day to every dad receiving one of our boxes today, and to every person who came in to pick one up this week. The two of you, together, are the reason these mornings are some of the most meaningful work we get to do.\n\nA full shop, repeat customers, boxes for fathers and grandfathers and partners. These are among our favourite days of the whole year. We're grateful to be part of yours.\n\nIf you'd like to share the dad you spoiled today, tag him below. We'd love to see.\n\nDerek, Jacqueline, and the team",hs:"#FathersDay #ChocolateBarrs #StratfordOntario #LocalLove #FamilyBusiness",vi:"GOAL: Close the Father's Day arc with gratitude. The post is about the customers, not the chocolatiers.\n\nSHOT TYPE: Carousel, 4 slides, 4:5 vertical.\n\nSLIDE BY SLIDE:\n  SLIDE 1 (hook): Derek and Jacqueline together behind the counter with one of the morning's finished boxes. Both of them looking at camera, warm and relaxed (not posed-corporate). The team in soft focus behind, working.\n  SLIDE 2: A wide of the shop earlier that morning. Customers visible (consent obtained), the energy of the day.\n  SLIDE 3: A customer-submitted photo from a past Father's Day (with permission). Dad opening a box, the family around him. If multiple submissions, pick the warmest.\n  SLIDE 4: A second customer-submitted photo, or a close-up of a handwritten thank-you card on the wall in the shop (these accumulate over years. They should be on display somewhere).\n\nLIGHTING: Warm late-morning natural. Sunday morning light is generous.\n\nPROPS / STAGING:\n  • Derek and Jacqueline in clean aprons, no styling\n  • A real finished box, not a styled prop one\n  • Customer photos used with explicit consent (DM ahead of time, get a clear yes)\n\nMOOD: Earned gratitude. Quiet celebration. Closure.\n\nIMPORTANT: Reach out to past customers for slide 3 and 4 photos at least a week ahead. Save the submissions in a folder for future Father's Days too.\n\nCAPTURE EXTRA:\n  • A team photo (everyone in the shop that morning) for the Story\n  • Close-up of a thank-you card or returned-customer note\n\nAVOID: corporate-headshot framing · obvious 'family business poster' staging · using customer photos without explicit consent · anything that feels self-congratulatory\n\nCAPTION OVERLAY: None.\n\nPOST: Sun Jun 21, 11:00am to 12:00pm (Father's Day mid-morning). Reply to every comment. Repost any customer tags to Story throughout the day.",mark:"Father's Day"},
+      {n:22,act:0,d:"Mon, Jun 22"},
+      {n:23,act:1,d:"Tue, Jun 23",t:"Treat Yourself Tuesday",ty:"Seasonal flavours",sh:"Summer flavours are back",tr:"T4",fm:"Carousel · 5 slides",gr:"product",pl:"CI",pe:"foodie",he:"just_because",go:"Engage with messaging",cp:"Summer flavours are returning to the case this week. It's the rotation we look forward to all winter.\n\nThe lavender truffle is back. It's always a small event around here. There's no middle ground with this one, and the people who've been waiting since last summer know exactly who they are.\n\n[Other current summer flavours. Fill in from the actual catalogue.]\n\nNone of these stay in the case all year. If there's a summer flavour you wait for, come grab it before the festival crowds discover it.\n\nWhich one are you reaching for first?",hs:"#TreatYourselfTuesday #SummerFlavours #LavenderTruffle #ChocolateBarrs #LimitedEdition",vi:"GOAL: Build anticipation and FOMO. Customers who love these flavours should feel personally addressed.\n\nSHOT TYPE: Carousel, 5 slides, 4:5 vertical, identical framing across slides 2 to 5 for cohesion.\n\nSLIDE BY SLIDE:\n  SLIDE 1 (hook): A top-down arrangement of all the summer pieces together on the marble cooling table. Clean, abundant, the full lineup visible at a glance. This is the 'they're back' visual.\n  SLIDE 2, Lavender truffle: single piece centred on the table, a single fresh lavender sprig in soft focus beside it.\n  SLIDE 3, [Second summer flavour, staffer to identify]: same framing, with a complementary natural prop (fresh berry, fresh ginger root, sprig of mint, etc. Match to the actual flavour).\n  SLIDE 4, [Third summer flavour]: same framing, same prop logic.\n  SLIDE 5: Wider case shot showing the summer cluster in context, with the rest of the case softly out of focus.\n\nLIGHTING: Soft window light, mid-morning. Same time of day across all five slides.\n\nPROPS / STAGING:\n  • Marble cooling table or dark wood as consistent background across all slides\n  • Real fresh ingredients as props (no fake or dried, fresh only)\n  • Each truffle photographed clean, no fingerprints\n  • Slide 1 arrangement should look generous but not crowded\n\nMOOD: Anticipated return. Small celebration. Limited-time energy without panic.\n\nCAPTURE EXTRA:\n  • A short Reel of the case being restocked with summer pieces. Useful for cross-posting.\n  • Detail shots of each truffle from a different angle for Story use\n\nAVOID: artificial-looking props · over-styled food-blog framing · matched stock-image-y compositions · anything that suggests these pieces are always available\n\nCAPTION OVERLAY: Small flavour name labels at bottom of slides 2 to 4 (subtle, in the brand font).\n\nPOST: Tue Jun 23, 11:00am to 12:00pm (Tuesday pre-lunch appetite window)."},
+      {n:24,act:1,d:"Wed, Jun 24",t:"Workshop Wednesday",ty:"Heritage equipment · team",sh:"Tools that shape every piece",tr:"T3",fm:"Carousel · 5 slides",gr:"process",pl:"MH",pe:"foodie",he:"brand",go:"Engage with messaging",cp:"Some of the tools in this workshop have been making chocolate longer than most living memory.\n\nThe marble cooling table is the centerpiece. Well over a hundred years old, carried through every move the shop has made, used every single day for tempering. It's shaped every piece of chocolate any of us has ever made for a customer.\n\n[Other heritage pieces in the workshop. Fill in based on what's actually in use.]\n\nThe recipes have evolved. The thermometers are modern. The workflow is more efficient than it was on day one. But the older tools stay where they are. There's something about the slow craft, the cool stone, the way these objects have been worn into doing their job perfectly over time, that still can't be replicated.",hs:"#WorkshopWednesday #ChocolateBarrs #HeritageCraft #BehindTheSweets #SlowCraft",vi:"GOAL: Build reverence and trust through the tools that touch every piece the customer takes home.\n\nSHOT TYPE: Carousel, 5 slides, 4:5 vertical, mood-consistent across all.\n\nSLIDE BY SLIDE:\n  SLIDE 1 (hook): The marble cooling table, wide and unmistakable, with a fresh batch of chocolate cooling on its surface. Shot from a low angle to give the cooling table presence. It should feel like the centrepiece of the workshop.\n  SLIDE 2: A close-up of the cooling table's surface, showing the slight wear and texture of a hundred years of use. The texture is the storytelling.\n  SLIDE 3: [Other heritage piece. Jacqueline or Derek to identify what's actually in use. A confectionery enrober, an old starch tray, a hand-cranked tool, a vintage scale, etc.] Same close-up reverent treatment.\n  SLIDE 4: Hands at work using one of the heritage tools. Movement and craft.\n  SLIDE 5: A finished piece of chocolate. The result. The closing argument: 'this is what all that history produces.'\n\nLIGHTING: Warm workshop daylight, soft and directional. Overheads off. Shoot in late afternoon when the window light gets golden.\n\nPROPS / STAGING:\n  • Workshop in working condition, not pre-cleaned\n  • Real chocolate at various stages on the surfaces\n  • Avoid: modern tools in frame (digital scales, thermometers, anything plastic)\n\nMOOD: Reverent. Quietly proud. Living history.\n\nCAPTURE EXTRA:\n  • A Reel beat of the cooling table being used at full speed. Alternate cross-post asset.\n  • Detail of any maker's mark, date stamp, or signature on the equipment\n\nAVOID: museum-style 'history exhibit' framing · captioning each piece with provenance (let the photos speak) · sepia filtering · making the equipment look retired (it's in active use, that's the point)\n\nCAPTION OVERLAY: Small text on slide 5 only: 'Made on equipment older than this town's chocolate tradition itself.' Or no text. Your call based on what the slide image needs.\n\nPOST: Wed Jun 24, 12:00pm (Workshop Wednesday lunch scroll). Boost optional. This is a high-value brand-building post."},
+      {n:25,act:0,d:"Thu, Jun 25"},
+      {n:26,act:0,d:"Fri, Jun 26"},
+      {n:27,act:0,d:"Sat, Jun 27"},
+      {n:28,act:1,d:"Sun, Jun 28",t:"Sunday Sweets & Stories",ty:"Founder story · Jacqueline",sh:"My side of the story",tr:"T3",fm:"Single-image feed",gr:"people",pl:"MH",pe:"local",he:"brand",go:"Engage with messaging",cp:"Derek told his side of how we got here a few weeks back. The mining-to-chocolate version. Mine's shorter, but it has its own quiet pieces.\n\nWe met when he was still working at Rheo Thompson's. That's where I learned he was the sort of person who could spend two hours explaining a single ganache and not notice that two hours had passed.\n\n(He still does this.)\n\nWhen we decided to open our own shop in 2003, the plan was simple. Derek would do the chocolate, and I'd do everything else. Twenty-two years later, that's still mostly how it works. The everything-else has just grown considerably.\n\nThe everything-else, mostly, is you. The people who walk in. Who come back. Who bring their kids, and their parents, and their partners. That's always been the part I've loved most.\n\nJacqueline",hs:"#SundayStories #ChocolateBarrs #StratfordOntario #BehindTheBrand #FamilyBusiness",vi:"GOAL: Close the founder-story arc with Jacqueline. The 'everything-else is you' turn makes the customer the heart of the business.\n\nSHOT TYPE: Single image, 4:5 vertical. Or optional 2-slide carousel if a second strong image is available.\n\nCOMPOSITION: Jacqueline at the counter or in the workshop. Three-quarter framing. Looking slightly off-camera (not posed-into-lens). Soft natural light from a side window. Workshop or shop floor softly out of focus behind.\n\nALTERNATE OPTION: A two-shot of Jacqueline and Derek together, candid, mid-conversation across the counter or at the cooling table. Not posed-corporate. The 'partners' visual.\n\nLIGHTING: Late afternoon golden light through the shop window. Single soft key, natural fill.\n\nPROPS / STAGING:\n  • Jacqueline in a clean apron, not styled\n  • Workshop in working condition\n  • If Derek is in the shot, both should look like they're mid-day, not staged\n\nMOOD: Quiet, generous, settled. The opposite of an executive headshot.\n\nCAPTURE TO PICK FROM:\n  1. Jacqueline solo at the counter\n  2. Jacqueline mid-conversation with a customer (consent obtained)\n  3. Jacqueline and Derek together, candid\n  4. Jacqueline's hands on a finished box, ribbon being tied\n\nAVOID: stiff or formal posing · forced smile · 'professional portrait' lighting · anything that doesn't look like her real day\n\nCAPTION OVERLAY: None.\n\nPOST: Sun Jun 28, 6:00 to 7:00pm (Sunday evening reflective scroll window). Highest-engagement slot of the week. Reply to every comment by hand within 24 hours."},
+      {n:29,act:1,d:"Mon, Jun 29",t:"Make Monday Sweeter",ty:"Canada Day prep",sh:"Canada Day on Wednesday",tr:"T4",fm:"Single-image feed",gr:"commercial",pl:"CI",pe:"local",he:"host",go:"Drive store visits",cp:"Canada Day is Wednesday, and we'll be open 10 to 4 that day.\n\nThe maple-themed pieces are arriving in the case this week. [List the actual maple offerings here.]\n\nIf you're hosting on the holiday and would like a small platter ready for you to pick up on your way, message us by Tuesday afternoon. We'll have it waiting at the counter.",hs:"#MakeMondaySweeter #CanadaDay #ChocolateBarrs #StratfordOntario #MapleSweets",vi:"GOAL: Practical helper post. The customer is the host. We're the prep team behind the scenes.\n\nSHOT TYPE: Single image, 4:5 vertical.\n\nCOMPOSITION: The case or counter with the maple-themed pieces freshly arrived. Composition should feel abundant but not Canada-Day-kitsch. Avoid heavy red-and-white styling.\n\nLIGHTING: Soft natural, late morning to midday.\n\nPROPS / STAGING:\n  • Actual maple-themed pieces in the case ([list per actual catalogue])\n  • Optional: a small sprig of natural greenery (cedar or pine if available. Feels Canadian without being on-the-nose)\n  • Avoid: maple-leaf cutouts, flags, red-and-white props in excess\n\nMOOD: Quiet seasonal warmth. Tasteful, not patriotic-billboard.\n\nCAPTURE TO PICK FROM:\n  1. Hero, the maple cluster in the case, top-down\n  2. A single maple piece in macro\n  3. A finished platter ready for pickup\n  4. The hours card on the counter with Canada Day hours\n\nAVOID: heavy red-and-white kitsch · maple leaf overload · stock-image holiday styling\n\nCAPTION OVERLAY: None.\n\nPOST: Mon Jun 29, 10:00 to 11:00am (Monday planning window for the holiday)."},
+      {n:30,act:1,d:"Tue, Jun 30",t:"Treat Yourself Tuesday",ty:"Canada Day last call",sh:"Hosting tomorrow?",tr:"T4",fm:"Carousel · 3 slides",gr:"commercial",pl:"AE",pe:"local",he:"host",go:"Drive store visits",cp:"Hosting something tomorrow? Here's how we can help, in order of lead time.\n\nPre-built boxes are on the counter today and Wednesday. Grab one on your way out the door, no order required.\n\nParty platters take a couple of hours. Call or message us by lunch on Wednesday and we'll have one waiting for pickup.\n\n[Any specific Canadian or maple offerings worth flagging here.]\n\nToday we're open 9 to 5:30. Canada Day, 10 to 4. Thursday, back to regular hours.\n\nAnd then, all of a sudden, it's July.",hs:"#TreatYourselfTuesday #CanadaDay #ChocolateBarrs #StratfordOntario #PartyPlatters",vi:"GOAL: Final hand-off into July. The customer is set up for hosting. We're the practical prep that made it possible.\n\nSHOT TYPE: Carousel, 3 slides, 4:5 vertical.\n\nSLIDE BY SLIDE:\n  SLIDE 1: A counter scene. Pre-built boxes lined up, ready to grab. Bright and abundant. Frame so the case is visible behind.\n  SLIDE 2: A finished party platter, top-down. Mix of caramels, truffles, sugared jellies. Generous but composed. The visual goal: 'this is what you take to the party.'\n  SLIDE 3: A small handwritten chalkboard with the three-day hours: 'Today · 9 to 5:30 / Canada Day · 10 to 4 / Thursday · regular hours'. Photograph it where it actually lives in the shop.\n\nLIGHTING: Soft natural midday light. Same time and consistency across all three slides.\n\nPROPS / STAGING:\n  • Real boxes, real platter (not styled props)\n  • Chalkboard with hand-written hours (not digital text)\n  • No heavy holiday styling. Let the chocolate be the visual.\n\nMOOD: Confident, helpful, end-of-month settled.\n\nCAPTURE EXTRA:\n  • A short looping clip of a platter being assembled. Useful for Story.\n  • A team member handing a box across the counter (with consent)\n\nAVOID: red-and-white styling · 'last call' urgency framing · cluttered counter compositions\n\nCAPTION OVERLAY: None on the carousel itself. The chalkboard does that work.\n\nPOST: Tue Jun 30, 10:00 to 11:00am (Tuesday morning host-planning energy). This is the month-closer post. Reply to comments through the day."}
+    ]
+  }
+};
+
+// state
+let filt = {gr:null, pl:null, pe:null, he:null, tr:null};
+let colorBy = "gr";
+let show = {theme:true, persona:true, pillar:true, tier:true, rest:true};
+let currentMonth = "jun";
+let selectedIdx = 0;
+
+
+function currentDays() { return months[currentMonth].days; }
+
+function count(key, dict){
+  const c = {};
+  Object.keys(dict).forEach(k => c[k] = 0);
+  currentDays().forEach(d => { if(d.act && c[d[key]] !== undefined) c[d[key]]++; });
+  return c;
+}
+
+function activeCount() { return currentDays().filter(d => d.act).length; }
+
+function renderMonthTabs() {
+  const tabs = document.getElementById("month-tabs");
+  let html = "";
+  Object.keys(months).forEach(k => {
+    const m = months[k];
+    const active = currentMonth === k ? " active" : "";
+    const count = m.days.filter(d => d.act).length;
+    html += `<button class="month-tab${active}" data-m="${k}">${m.name} <small>${count} posts</small></button>`;
+  });
+  tabs.innerHTML = html;
+  tabs.querySelectorAll(".month-tab[data-m]").forEach(el => {
+    el.addEventListener("click", () => {
+      currentMonth = el.dataset.m;
+      selectedIdx = currentDays().findIndex(d => d.act);
+      if (selectedIdx < 0) selectedIdx = 0;
+      filt = {gr:null, pl:null, pe:null, he:null, tr:null};
+      renderAll();
+    });
+  });
+}
+
+function renderContext() {
+  document.getElementById("month-context").textContent = months[currentMonth].context;
+}
+
+function renderStats() {
+  const days = currentDays();
+  const active = days.filter(d => d.act);
+  const reels = active.filter(d => d.fm && d.fm.includes("Reel")).length;
+  const total = days.length;
+  const perWeek = (active.length / (total / 7)).toFixed(1);
+  document.getElementById("stats").innerHTML = `
+    <div><div class="stat-l">Planned posts</div><div class="stat-v">${active.length}</div></div>
+    <div><div class="stat-l">Per week</div><div class="stat-v">~${perWeek}</div></div>
+    <div><div class="stat-l">Quiet days</div><div class="stat-v">${total - active.length}</div></div>
+    <div><div class="stat-l">Reels</div><div class="stat-v">${reels}</div></div>
+  `;
+}
+
+function renderDist(){
+  const dist = ["gr","pl","pe","he","tr"];
+  let html = "";
+  dist.forEach(key => {
+    const dict = DICTS[key];
+    const c = count(key, dict);
+    const entries = Object.keys(dict).map(k => ({
+      k, v:c[k]||0, l:dict[k].l, c:dict[k].dot||dict[k].c
+    })).sort((a,b) => b.v - a.v);
+    const total = entries.reduce((s,e) => s+e.v, 0);
+    let bar = "";
+    entries.forEach(e => {
+      if(e.v > 0) bar += `<div class="dist-seg" style="width:${(e.v/total*100).toFixed(2)}%;background:${e.c}" title="${e.l}: ${e.v}"></div>`;
+    });
+    let chips = "";
+    entries.forEach(e => {
+      const on = filt[key]===e.k ? " on" : "";
+      chips += `<button class="chip${on}" data-dim="${key}" data-val="${e.k}"><span class="chip-dot" style="background:${e.c}"></span>${e.l}<span class="chip-count">${e.v}</span></button>`;
+    });
+    html += `<div class="dist-block"><div class="dist-head"><span class="dist-title">${LABELS[key]}</span></div><div class="dist-bar">${bar}</div><div class="chips">${chips}</div></div>`;
+  });
+  document.getElementById("dist").innerHTML = html;
+  document.querySelectorAll(".chip[data-dim]").forEach(el => {
+    el.addEventListener("click", () => {
+      const dim = el.dataset.dim, val = el.dataset.val;
+      filt[dim] = (filt[dim] === val) ? null : val;
+      renderDist(); renderActive(); renderCal();
+    });
+  });
+}
+
+function renderActive(){
+  const a = document.getElementById("active-row");
+  const active = Object.keys(filt).filter(k => filt[k]);
+  if(active.length === 0){
+    a.innerHTML = "<span>No filters active.</span>";
+    return;
+  }
+  let html = "<span>Filtering by:</span>";
+  active.forEach(k => {
+    const v = filt[k];
+    const d = DICTS[k][v];
+    html += `<span class="active-pill"><span class="active-pill-d"></span>${FIELD_LABEL[k]}: ${d.l}</span>`;
+  });
+  html += `<button class="clear-btn" onclick="clearFilters()">Clear all</button>`;
+  a.innerHTML = html;
+}
+
+function clearFilters(){
+  filt = {gr:null, pl:null, pe:null, he:null, tr:null};
+  renderDist(); renderActive(); renderCal();
+}
+
+function matchesFilters(d){
+  if(!d.act) return true;
+  for(const k in filt){
+    if(filt[k] && d[k] !== filt[k]) return false;
+  }
+  return true;
+}
+
+function hasActiveFilters(){
+  return Object.keys(filt).some(k => filt[k]);
+}
+
+function getCellStyle(d){
+  const dict = DICTS[colorBy];
+  const key = d[colorBy];
+  const item = dict[key];
+  if(!item) return {bg: "#FFFFFF", text: "var(--ink)"};
+  return {bg: item.bg, text: item.dark};
+}
+
+function renderCal(){
+  const cal = document.getElementById("cal");
+  const m = months[currentMonth];
+  let html = "";
+  // Leading empty cells
+  for(let i = 0; i < m.startOn; i++) html += `<div class="day empty"></div>`;
+  m.days.forEach((d, i) => {
+    if(!d.act){
+      const dim = hasActiveFilters() ? " dim" : "";
+      const sel = (i === selectedIdx ? " sel" : "");
+      const hidden = !show.rest ? " hidden" : "";
+      html += `<div class="day rest${dim}${sel}${hidden}" data-i="${i}">
+        <div class="rest-inner">
+          <div class="rest-n">${d.n}</div>
+          <div class="rest-l">quiet day</div>
+        </div>
+      </div>`;
+      return;
+    }
+    const style = getCellStyle(d);
+    const pe = PE[d.pe];
+    const tr = T[d.tr];
+    const match = matchesFilters(d);
+    const cls = (i === selectedIdx ? " sel" : "") + (!match ? " dim" : "");
+    let dotHtml = show.persona ? `<div class="day-pdot" style="background:${pe.c}" title="${pe.l}"></div>` : "";
+    let themeHtml = show.theme ? `<div class="day-theme" style="color:${style.text}99">${d.t.replace(/ \(.*\)/,'')}</div>` : "";
+    let pillarHtml = show.pillar ? `<span class="day-pill" style="color:${style.text}">${d.pl}</span>` : "";
+    let tierHtml = show.tier ? `<div class="day-tier" style="background:${tr.c}"></div>` : "";
+    let markHtml = d.mark ? `<div class="day-mark">${d.mark}</div>` : "";
+    html += `<div class="day${cls}" data-i="${i}" style="background:${style.bg}">
+      ${markHtml}
+      <div class="day-inner">
+        <div class="day-top">
+          <div><div class="day-n" style="color:${style.text}">${d.n}</div>${themeHtml}</div>
+          <div class="day-icons">${dotHtml}</div>
+        </div>
+        <div class="day-short" style="color:${style.text}">${d.sh}</div>
+        <div class="day-bot">${pillarHtml}</div>
+      </div>
+      ${tierHtml}
+    </div>`;
+  });
+  // Trailing empty cells to round out the last week
+  const totalCells = m.startOn + m.totalDays;
+  const trailing = (7 - (totalCells % 7)) % 7;
+  for(let i = 0; i < trailing; i++) html += `<div class="day empty"></div>`;
+  cal.innerHTML = html;
+  cal.querySelectorAll(".day[data-i]").forEach(el => {
+    el.addEventListener("click", () => {
+      selectedIdx = parseInt(el.dataset.i);
+      renderCal(); renderDetail();
+    });
+  });
+}
+
+function renderDetail(){
+  const d = currentDays()[selectedIdx];
+  const detail = document.getElementById("detail");
+  if(!d){ detail.innerHTML = ""; return; }
+  if(!d.act){
+    detail.innerHTML = `<div class="rest-detail">
+      <div class="rd-title">${d.n ? months[currentMonth].name.split(" ")[0] + " " + d.n : ""} · quiet day</div>
+      <div class="rd-sub">No feed post planned for this day. Use it for Stories, audience listening, customer DMs, or simply rest. Quiet days are part of the plan, not gaps in it.</div>
+    </div>`;
+    return;
+  }
+  const g = G[d.gr], pe = PE[d.pe], tr = T[d.tr], pl = P[d.pl], he = H[d.he];
+  
+  detail.innerHTML = `
+    <div class="dt-eyebrow">${d.d} · ${d.t}</div>
+    <div class="dt-title">${d.sh}</div>
+    <div class="dt-meta-tags">
+      <span class="dt-tag" style="background:${tr.bg};color:${tr.dark}"><span class="dt-tag-d" style="background:${tr.c}"></span>${d.tr} · ${tr.l}</span>
+      <span class="dt-tag" style="background:${g.bg};color:${g.dark}"><span class="dt-tag-d" style="background:${g.dot}"></span>${g.l}</span>
+    </div>
+    <div class="dt-meta">
+      <div class="meta-row"><div class="meta-label">Content type</div><div class="meta-value">${d.ty}</div></div>
+      <div class="meta-row"><div class="meta-label">Format</div><div class="meta-value">${d.fm}</div></div>
+      <div class="meta-row"><div class="meta-label">Strategic goal</div><div class="meta-value">${d.go}</div></div>
+      <div class="meta-row"><div class="meta-label">Messaging pillar</div><div class="meta-value"><span class="meta-sq" style="background:${pl.c}"></span>${pl.l} (${d.pl})</div></div>
+      <div class="meta-row"><div class="meta-label">Persona</div><div class="meta-value"><span class="meta-cr" style="background:${pe.c}"></span>${pe.l}</div></div>
+      <div class="meta-row"><div class="meta-label">Hero moment</div><div class="meta-value"><span class="meta-sq" style="background:${he.c}"></span>${he.l}</div></div>
+    </div>
+    <div class="cap-eyebrow">Caption <button class="cap-copy" onclick="copyCaption(${d.n})">Copy</button></div>
+    <div class="caption" id="caption-text">${d.cp.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}<span class="hashtags">${d.hs}</span></div>
+    <div class="visual"><span class="visual-label">Visual brief</span><span>${d.vi}</span></div>
+  `;
+  
+}
+
+function copyCaption(n) {
+  const d = currentDays().find(x => x.n === n);
+  if (!d) return;
+  const text = d.cp + "\n\n" + d.hs;
+  const btn = document.querySelector('.cap-copy');
+
+  const flash = (label, ms) => {
+    if (!btn) return;
+    const orig = btn.dataset.orig || btn.textContent;
+    btn.dataset.orig = orig;
+    btn.textContent = label;
+    setTimeout(() => { btn.textContent = orig; }, ms || 1500);
+  };
+
+  const onSuccess = () => flash("Copied", 1500);
+  const onFail    = () => flash("Couldn't copy", 2000);
+
+  // Try modern clipboard API first (only works in secure / permitted contexts)
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess, onFail));
+  } else {
+    fallbackCopy(text, onSuccess, onFail);
+  }
+}
+
+function fallbackCopy(text, onSuccess, onFail) {
+  // Older execCommand path that works inside sandboxed iframes
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '0';
+    ta.style.opacity = '0';
+    ta.style.pointerEvents = 'none';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    const ok = document.execCommand && document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (ok) onSuccess();
+    else onFail();
+  } catch (e) {
+    onFail();
+  }
+}
+
+function renderAll() {
+  renderMonthTabs();
+  renderContext();
+  renderStats();
+  renderDist();
+  renderActive();
+  renderCal();
+  renderDetail();
+}
+
+// Event listeners
+document.getElementById("seg-color").addEventListener("click", e => {
+  if(e.target.tagName !== "BUTTON") return;
+  document.querySelectorAll("#seg-color button").forEach(b => b.classList.remove("active"));
+  e.target.classList.add("active");
+  colorBy = e.target.dataset.v;
+  renderCal();
+});
+
+document.getElementById("toggles").addEventListener("click", e => {
+  const t = e.target.closest(".toggle");
+  if(!t) return;
+  const key = t.dataset.t;
+  show[key] = !show[key];
+  t.classList.toggle("on", show[key]);
+  renderCal();
+});
+
+// init
+(function() {
+  selectedIdx = currentDays().findIndex(d => d.act);
+  if (selectedIdx < 0) selectedIdx = 0;
+  renderAll();
+})();
+</script>
+</body>
+</html>
